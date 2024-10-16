@@ -1,0 +1,28 @@
+// Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
+import { VirtualMachine } from "./vm";
+
+export function charCodes(...args: string[]): number[] {
+  const acc: number[] = [];
+
+  for (let i = 0; i < args.length; i++) {
+    const str = args[i],
+      strlen = str.length;
+
+    for (let j = 0; j < strlen; j++) {
+      acc.push(str.charCodeAt(j));
+    }
+  }
+
+  return acc;
+}
+
+export function decodeString(vm: VirtualMachine, length: number): string {
+  let acc = "";
+
+  for (let i = 0; i < length; i++) {
+    const charCode = vm.pop(); // pop from stack, not memory
+    acc += String.fromCharCode(charCode);
+  }
+
+  return acc;
+}
