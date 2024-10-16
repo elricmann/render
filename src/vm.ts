@@ -51,9 +51,6 @@ export class VirtualMachine {
   run() {
     while (this.pc < this.program.length) {
       const opcode = this.program[this.pc++];
-
-      // console.log({ opcode });
-
       switch (opcode) {
         case OPCODE_CREATE_ELEMENT:
           this.createElement();
@@ -92,7 +89,6 @@ export class VirtualMachine {
   }
 
   createElement() {
-    // const tagNameLength = this.pop();
     const tagNameLength = this.program[this.pc++];
     const tagNameStart = this.pc;
     const tagNameBytes = this.program.slice(
@@ -101,7 +97,6 @@ export class VirtualMachine {
     );
 
     const tagName = String.fromCharCode(...tagNameBytes);
-    console.log({ tagName, tagNameLength });
 
     this.pc += tagNameLength;
 
@@ -154,11 +149,17 @@ export class VirtualMachine {
   }
 
   appendChild() {
-    const childId = this.pop();
-    const parentId = this.pop();
+    const childId = this.elementCount - 1;
+    const parentId = this.elementCount - 2;
+
     const parent = this.elementMap.get(parentId) as HTMLElement;
-    const child = this.elementMap.get(childId) as HTMLElement;
-    parent.appendChild(child);
+    const child = this.elementMap.get(childId) as HTMLElement | Text;
+
+    if (parent && child) {
+      parent.appendChild(child);
+    } else {
+      throw new Error("Invalid parent or child element ID");
+    }
   }
 
   removeChild() {
@@ -193,15 +194,6 @@ export class VirtualMachine {
     this.elementMap.set(id, textNode);
     this.push(id); /* push idx of text node onto stack */
   }
-
-  // createTextNode() {
-  //   const textLength = this.pop();
-  //   const text = this.decodeUTF16String(textLength);
-  //   const textNode = document.createTextNode(text);
-  //   const id = this.elementCount++;
-  //   this.elementMap.set(id, textNode);
-  //   this.push(id);
-  // }
 
   setText() {
     const textLength = this.pop();
