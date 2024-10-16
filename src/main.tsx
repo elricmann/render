@@ -8,7 +8,7 @@ import {
   OPCODE_TEXT_NODE,
   OPCODE_NOP,
 } from "./";
-import { View, Container } from "./view";
+import { View, Text, Container } from "./view";
 import { charCodes } from "./utils";
 
 const bytecode = new Uint8Array([
@@ -39,10 +39,8 @@ const bytecode = new Uint8Array([
 const vm = new VirtualMachine(bytecode);
 vm.run();
 
-const view1 = new View();
-const view2 = new View();
-const container = new Container([view1, view2]);
-console.log({ out: container.render() });
+// @todo: append children & siblings accordingly
+console.log(new View([new Container(), new Text("hello, world")]).render());
 
 console.log(vm);
 console.table({ bytecode });
