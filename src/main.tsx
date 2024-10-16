@@ -21,14 +21,10 @@ const bytecode = new Uint8Array([
   OPCODE_NOP,
   1,
   ...charCodes("1"),
-  // OPCODE_APPEND_CHILD,
-  // OPCODE_TEXT_NODE,
-  // 5,
-  // "H".charCodeAt(0),
-  // "e".charCodeAt(0),
-  // "l".charCodeAt(0),
-  // "l".charCodeAt(0),
-  // "o".charCodeAt(0),
+  // OPCODE_APPEND_CHILD, // ----> must fail
+  OPCODE_TEXT_NODE,
+  5,
+  ...charCodes("hello"),
   // OPCODE_APPEND_CHILD,
 ]);
 

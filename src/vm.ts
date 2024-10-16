@@ -146,8 +146,6 @@ export class VirtualMachine {
     const elementId = this.elementCount - 1; /* least recent element */
     const element = this.elementMap.get(elementId) as HTMLElement;
 
-    console.log({ element, attrName, attrValue });
-
     if (element) {
       element.setAttribute(attrName, attrValue);
     } else {
@@ -182,13 +180,28 @@ export class VirtualMachine {
   }
 
   createTextNode() {
-    const textLength = this.pop();
-    const text = this.decodeUTF16String(textLength);
-    const textNode = document.createTextNode(text);
+    const textLength = this.program[this.pc++];
+    const textStart = this.pc;
+    const textBytes = this.program.slice(textStart, textStart + textLength);
+
+    const textContent = String.fromCharCode(...textBytes);
+    this.pc += textLength;
+
+    const textNode = document.createTextNode(textContent);
     const id = this.elementCount++;
+
     this.elementMap.set(id, textNode);
-    this.push(id);
+    this.push(id); /* push idx of text node onto stack */
   }
+
+  // createTextNode() {
+  //   const textLength = this.pop();
+  //   const text = this.decodeUTF16String(textLength);
+  //   const textNode = document.createTextNode(text);
+  //   const id = this.elementCount++;
+  //   this.elementMap.set(id, textNode);
+  //   this.push(id);
+  // }
 
   setText() {
     const textLength = this.pop();
