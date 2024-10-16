@@ -6,9 +6,10 @@ import {
   OPCODE_SET_ATTRIBUTE,
   OPCODE_APPEND_CHILD,
   OPCODE_TEXT_NODE,
-  charCodes,
   OPCODE_NOP,
 } from "./";
+import { View, Container } from "./view";
+import { charCodes } from "./utils";
 
 const bytecode = new Uint8Array([
   OPCODE_CREATE_ELEMENT,
@@ -37,6 +38,11 @@ const bytecode = new Uint8Array([
 
 const vm = new VirtualMachine(bytecode);
 vm.run();
+
+const view1 = new View();
+const view2 = new View();
+const container = new Container([view1, view2]);
+console.log({ out: container.render() });
 
 console.log(vm);
 console.table({ bytecode });
