@@ -2,9 +2,10 @@
 import { VirtualMachine } from "./vm";
 
 export function charCodes(...args: string[]): number[] {
-  const acc: number[] = [];
+  const acc: number[] = [],
+    argslen = args.length;
 
-  for (let i = 0; i < args.length; i++) {
+  for (let i = 0; i < argslen; i++) {
     const str = args[i],
       strlen = str.length;
 

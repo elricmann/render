@@ -9,6 +9,7 @@ export const OPCODE_SET_TEXT = 0x07;
 export const OPCODE_REMOVE_ATTRIBUTE = 0x08;
 export const OPCODE_STYLE = 0x09;
 export const OPCODE_EVENT_LISTENER = 0x0a;
+export const OPCODE_NOP = 0x0b;
 
 export type Program = Uint8Array;
 export type Memory = Uint8Array;
@@ -41,7 +42,7 @@ export class VirtualMachine {
     return this.stack[this.stack[0]++];
   }
 
-  decodeString(length: number): string {
+  decodeUTF16String(length: number): string {
     const chars = new Uint8Array(this.memory.buffer, this.stack[0], length);
     this.stack[0] += Math.ceil(length / (1 << 2));
     return String.fromCharCode(...chars);
@@ -116,15 +117,42 @@ export class VirtualMachine {
   }
 
   setAttribute() {
-    const attrNameLength = this.program[this.pc++];
-    const attrName = this.decodeString(attrNameLength);
-    // const attrValueLength = this.pop();
-    const attrValueLength = this.program[this.pc++];
-    const attrValue = this.decodeString(attrValueLength);
-    const id = this.pop();
-    const element = this.elementMap.get(id) as HTMLElement;
+    const attrNameLength = this.program[this.pc++] - 1;
+    const attrNameStart = this.pc;
+    const attrNameBytes = this.program.slice(
+      attrNameStart,
+      attrNameStart + attrNameLength
+    );
 
-    element.setAttribute(attrName, attrValue);
+    const attrName = String.fromCharCode(...attrNameBytes);
+    this.pc += attrNameLength;
+
+    if (this.program[this.pc++] !== OPCODE_NOP) {
+      throw new Error(
+        "Expected OPCODE_NOP delimiter between attribute name and value"
+      );
+    }
+
+    const attrValueLength = this.program[this.pc++];
+    const attrValueStart = this.pc;
+    const attrValueBytes = this.program.slice(
+      attrValueStart,
+      attrValueStart + attrValueLength
+    );
+
+    const attrValue = String.fromCharCode(...attrValueBytes);
+    this.pc += attrValueLength;
+
+    const elementId = this.elementCount - 1; /* least recent element */
+    const element = this.elementMap.get(elementId) as HTMLElement;
+
+    console.log({ element, attrName, attrValue });
+
+    if (element) {
+      element.setAttribute(attrName, attrValue);
+    } else {
+      throw new Error("Invalid element ID");
+    }
   }
 
   appendChild() {
@@ -155,7 +183,7 @@ export class VirtualMachine {
 
   createTextNode() {
     const textLength = this.pop();
-    const text = this.decodeString(textLength);
+    const text = this.decodeUTF16String(textLength);
     const textNode = document.createTextNode(text);
     const id = this.elementCount++;
     this.elementMap.set(id, textNode);
@@ -164,7 +192,7 @@ export class VirtualMachine {
 
   setText() {
     const textLength = this.pop();
-    const text = this.decodeString(textLength);
+    const text = this.decodeUTF16String(textLength);
     const id = this.pop();
     const textNode = this.elementMap.get(id) as Text;
     textNode.nodeValue = text;
@@ -172,7 +200,7 @@ export class VirtualMachine {
 
   removeAttribute() {
     const attrNameLength = this.pop();
-    const attrName = this.decodeString(attrNameLength);
+    const attrName = this.decodeUTF16String(attrNameLength);
     const id = this.pop();
     const element = this.elementMap.get(id) as HTMLElement;
     element.removeAttribute(attrName);
@@ -180,9 +208,9 @@ export class VirtualMachine {
 
   setStyle() {
     const styleNameLength = this.pop();
-    const styleName = this.decodeString(styleNameLength);
+    const styleName = this.decodeUTF16String(styleNameLength);
     const styleValueLength = this.pop();
-    const styleValue = this.decodeString(styleValueLength);
+    const styleValue = this.decodeUTF16String(styleValueLength);
     const id = this.pop();
     const element = this.elementMap.get(id) as HTMLElement;
     element.style[styleName as any] = styleValue;
@@ -190,7 +218,7 @@ export class VirtualMachine {
 
   setEventListener() {
     const eventTypeLength = this.pop();
-    const eventType = this.decodeString(eventTypeLength);
+    const eventType = this.decodeUTF16String(eventTypeLength);
     const id = this.pop();
     const element = this.elementMap.get(id) as HTMLElement;
     const callbackId = this.pop();
