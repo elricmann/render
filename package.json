@@ -1,0 +1,28 @@
+{
+  "name": "librender",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Elric Neumann <elricmann@proton.me> (https://elric.pl)",
+  "homepage": "https://github.com/elricmann/render",
+  "repository": "github:elricmann/render",
+  "license": "MIT",
+  "keywords": [],
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc && vite build --watch",
+    "start": "vite --host --open",
+    "build": "tsc && vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "tslib": "^2.7.0",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8"
+  }
+}
