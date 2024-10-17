@@ -5,7 +5,7 @@ import {
   OPCODE_TEXT_NODE,
 } from "./vm";
 
-type Uint8ArraySlice = {
+export type Uint8ArraySlice = {
   render: () => Uint8Array;
 };
 

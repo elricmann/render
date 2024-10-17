@@ -58,11 +58,8 @@ const bytecode = new Uint8Array([
   OPCODE_APPEND_CHILD,
 ]);
 
-const vm = new VirtualMachine(bytecode);
-vm.run();
-
 // prettier-ignore
-console.log(
+const _app =
   new View([
     new Container([
       new Text("text 1"),
@@ -70,7 +67,10 @@ console.log(
     ]),
     new Text("text 3"),
   ]).render()
-);
+
+// const vm = new VirtualMachine(bytecode);
+const vm = new VirtualMachine(_app);
+vm.run();
 
 console.log(vm);
 
