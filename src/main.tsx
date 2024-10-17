@@ -47,16 +47,31 @@ const bytecode = new Uint8Array([
   OPCODE_APPEND_CHILD,
 
   OPCODE_APPEND_SIBLING,
+
+  // ===
+  OPCODE_CREATE_ELEMENT,
+  3,
+  ...charCodes("div"),
+  OPCODE_TEXT_NODE,
+  7,
+  ...charCodes("hello 3"),
+  OPCODE_APPEND_CHILD,
 ]);
 
 const vm = new VirtualMachine(bytecode);
 vm.run();
 
-// @todo: append children & siblings accordingly
-console.log(new View([new Container(), new Text("hello, world")]).render());
+// prettier-ignore
+console.log(
+  new View([
+    new Container([
+      new Text("text 1"),
+      new Text("text 2")
+    ]),
+    new Text("text 3"),
+  ]).render()
+);
 
 console.log(vm);
-console.table({ bytecode });
-console.log(vm.peek());
 
 document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);

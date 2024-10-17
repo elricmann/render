@@ -10,7 +10,7 @@ export const OPCODE_REMOVE_ATTRIBUTE = 0x08;
 export const OPCODE_STYLE = 0x09;
 export const OPCODE_EVENT_LISTENER = 0x0a;
 export const OPCODE_NOP = 0x0b;
-export const OPCODE_APPEND_SIBLING = 0x0c;
+export const OPCODE_APPEND_SIBLING = 99;
 
 export type Stack = Int32Array;
 export type Memory = Uint8Array;
@@ -167,15 +167,11 @@ export class VirtualMachine {
     const parent = this.elementMap.get(parentId) as HTMLElement;
     const child = this.elementMap.get(childId) as HTMLElement | Text;
 
-    console.log({ elementMap: this.elementMap, childId, parentId });
-
     if (parent && child) {
-      // this.elementMap.delete(parentId);
       this.elementMap.delete(childId);
 
       if (this.elementCount > 0) {
         this.elementCount--;
-        // this.elementCount--;
       }
 
       parent.appendChild(child);
