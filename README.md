@@ -3,5 +3,5 @@
 ### Quick Overview
 
 <p align="center">
-  <img width="500px" src="/.github/graph.png">
+  <img width="80%" src="/.github/graph.png">
 </p>
