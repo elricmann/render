@@ -10,12 +10,17 @@ export const OPCODE_REMOVE_ATTRIBUTE = 0x08;
 export const OPCODE_STYLE = 0x09;
 export const OPCODE_EVENT_LISTENER = 0x0a;
 export const OPCODE_NOP = 0x0b;
+export const OPCODE_APPEND_SIBLING = 0x0c;
 
-export type Program = Uint8Array;
-export type Memory = Uint8Array;
 export type Stack = Int32Array;
+export type Memory = Uint8Array;
+export type Program = Uint8Array;
+// export type ImmutableMap<K, V> = Omit<Map<K, V>, "delete" | "clear">;
 export type DOMElement = HTMLElement | Text;
 export type DOMAttributes = Record<string, string>;
+
+const isGecko =
+  typeof navigator !== "undefined" && /gecko/i.test(navigator.userAgent);
 
 export class VirtualMachine {
   pc: number;
@@ -32,6 +37,10 @@ export class VirtualMachine {
     this.program = program;
     this.elementMap = new Map();
     this.elementCount = 0;
+  }
+
+  peek(): NonNullable<DOMElement> {
+    return this.elementMap.get(0) as DOMElement;
   }
 
   push(value: number) {
@@ -60,6 +69,9 @@ export class VirtualMachine {
           break;
         case OPCODE_APPEND_CHILD:
           this.appendChild();
+          break;
+        case OPCODE_APPEND_SIBLING:
+          this.appendSibling();
           break;
         case OPCODE_REMOVE_CHILD:
           this.removeChild();
@@ -155,8 +167,59 @@ export class VirtualMachine {
     const parent = this.elementMap.get(parentId) as HTMLElement;
     const child = this.elementMap.get(childId) as HTMLElement | Text;
 
+    console.log({ elementMap: this.elementMap, childId, parentId });
+
     if (parent && child) {
+      // this.elementMap.delete(parentId);
+      this.elementMap.delete(childId);
+
+      if (this.elementCount > 0) {
+        this.elementCount--;
+        // this.elementCount--;
+      }
+
       parent.appendChild(child);
+    } else {
+      throw new Error("Invalid parent or child element ID");
+    }
+  }
+
+  appendSibling() {
+    const childId = this.elementCount - 1;
+    const parentId = this.elementCount - 2;
+    const insertionPosition = "afterend";
+
+    const parent = this.elementMap.get(parentId) as HTMLElement;
+    const child = this.elementMap.get(childId) as HTMLElement | Text;
+
+    if (parent && child) {
+      this.elementMap.delete(childId);
+
+      if (this.elementCount > 0) {
+        this.elementCount--;
+      }
+
+      // avoids NoModificationAllowedError on FF which requires
+      // skipping a single frame before inserting adjacent nodes/text
+      if (child instanceof Text)
+        if (isGecko)
+          requestAnimationFrame(() =>
+            parent.insertAdjacentText(
+              insertionPosition,
+              (child as Text).textContent as string
+            )
+          );
+        else
+          parent.insertAdjacentText(
+            insertionPosition,
+            (child as Text).textContent as string
+          );
+      else if (isGecko)
+        requestAnimationFrame(() =>
+          parent.insertAdjacentElement(insertionPosition, child as HTMLElement)
+        );
+      else
+        parent.insertAdjacentElement(insertionPosition, child as HTMLElement);
     } else {
       throw new Error("Invalid parent or child element ID");
     }

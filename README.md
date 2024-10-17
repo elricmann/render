@@ -16,10 +16,10 @@ _This section is incomplete._
   - [x] Create DOM nodes (`OPCODE_CREATE_ELEMENT`)
   - [x] Decode 8-bit entries with static offsets (UTF-16 character codes)
   - [x] Set DOM node attribute to least recent node (`OPCODE_SET_ATTRIBUTE`)
-  - [ ] Append least recent nodes as parent-child (`OPCODE_APPEND_CHILD`)
+  - [x] Append least recent nodes as parent-child (`OPCODE_APPEND_CHILD`)
   - [x] Create DOM text node (`OPCODE_TEXT_NODE`)
   - [ ] Set `innerHTML` with in-memory string source
-  - [ ] Append adjacent DOM nodes as siblings
+  - [x] Append adjacent DOM nodes as siblings (`OPCODE_APPEND_SIBLING`)
   - [ ] Diffing and patching arbitrary bytecodes
 - [ ] Consistency in rendering with timed `requestAnimationFrame`
 - [ ] Non-tracking reactive primitives in views
