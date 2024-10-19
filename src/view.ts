@@ -45,7 +45,7 @@ export class Container implements Uint8ArraySlice {
     let totalLength = containerBytes.length,
       childrenLength = this.children.length;
 
-    for (let i = 0; i < childrenLength; i++) {
+    for (let i = childrenLength - 1; i >= 0; i--) {
       totalLength += this.children[i].render().length;
 
       // - 1 prevents rendering all adjacent nodes
@@ -59,7 +59,7 @@ export class Container implements Uint8ArraySlice {
 
     let offset = containerBytes.length;
 
-    for (let i = 0; i < childrenLength; i++) {
+    for (let i = childrenLength - 1; i >= 0; i--) {
       const childBytes = this.children[i].render();
 
       buffer.set(childBytes, offset);

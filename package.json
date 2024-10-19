@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "dev": "tsc && vite build --watch",
-    "start": "vite --host --open",
+    "start": "vite --host",
     "build": "tsc && vite build"
   },
   "devDependencies": {
