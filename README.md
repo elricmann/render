@@ -34,7 +34,7 @@ Render relies on **views** to return byte arrays with exact alignment of data va
 Portability is the primary goal of this library. I wrote `librender` expecting that there could be a **single optimizing bytecode IR** for various web-based rendering libraries. To this effect, there is an imperative-procedural approach when defining view methods that correspond to raw bytecode.
 
 <p align="center">
-  <img width="80%" src="/.github/graph.png">
+  <img src="/.github/graph.png">
 </p>
 
 #### Completeness of the virtual machine
@@ -42,7 +42,7 @@ Portability is the primary goal of this library. I wrote `librender` expecting t
 The VM does not fully take the role of a DOM-based model and opcodes are only limited to DOM operations where inputs are serializable (e.g. event handlers are _not_ serializable). It lacks features like pausability and resumability, async batch streaming, per-batch scheduling, and virtual prioritization, that could essentially improve rendering.
 
 <p align="center">
-  <img width="80%" src="/.github/vm.png">
+  <img src="/.github/vm.png">
 </p>
 
 The structural description of the VM is:
@@ -56,7 +56,7 @@ The structural description of the VM is:
 WebAssembly modules are loaded as view slices into an array buffer representing a linear memory model. Since modules are precompiled, the bytecode could target `librender` with virtually no overhead. This would imply that optimizing the VM itself from the JavaScript source would improve existing programs without introducing layers of indirection.
 
 <p align="center">
-  <img width="80%" src="/.github/portable.png">
+  <img src="/.github/portable.png">
 </p>
 
 With this enabled, various high-level libraries targeting the bytecode can be used as microfrontends with predictability. Currently, `librender` is barely useable so this will require major effort to put in place. Additionally, certain data structures can be linearly represented for uniformity, e.g. C-like structs with offsets require no deallocation in WebAssembly. Growing memory is as easy as incrementing a pointer.
