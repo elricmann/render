@@ -27,20 +27,20 @@ export class VirtualMachine {
   stack: Stack;
   memory: Memory;
   program: Program;
-  elementMap: Map<number, DOMElement>;
-  elementCount: number;
+  nodeIndexStack: Map<number, DOMElement>;
+  nodeCount: number;
 
   constructor(program: Program) {
     this.pc = 0;
     this.stack = new Int32Array(1024);
     this.memory = new Uint8Array(1024);
     this.program = program;
-    this.elementMap = new Map();
-    this.elementCount = 0;
+    this.nodeIndexStack = new Map();
+    this.nodeCount = 0;
   }
 
   peek(): NonNullable<DOMElement> {
-    return this.elementMap.get(0) as DOMElement;
+    return this.nodeIndexStack.get(0) as DOMElement;
   }
 
   push(value: number) {
@@ -117,9 +117,9 @@ export class VirtualMachine {
     }
 
     const element = document.createElement(tagName);
-    const id = this.elementCount++;
+    const id = this.nodeCount++;
 
-    this.elementMap.set(id, element);
+    this.nodeIndexStack.set(id, element);
     this.push(id);
   }
 
@@ -150,8 +150,11 @@ export class VirtualMachine {
     const attrValue = String.fromCharCode(...attrValueBytes);
     this.pc += attrValueLength;
 
-    const elementId = this.elementCount - 1; /* least recent element */
-    const element = this.elementMap.get(elementId) as HTMLElement;
+    // we use nodeIndexStack to pop off least recent nodes
+    // which is why its correlates with a stack (intent)
+
+    const elementId = this.nodeCount - 1; /* least recent element */
+    const element = this.nodeIndexStack.get(elementId) as HTMLElement;
 
     if (element) {
       element.setAttribute(attrName, attrValue);
@@ -161,17 +164,17 @@ export class VirtualMachine {
   }
 
   appendChild() {
-    const childId = this.elementCount - 1;
-    const parentId = this.elementCount - 2;
+    const childId = this.nodeCount - 1;
+    const parentId = this.nodeCount - 2;
 
-    const parent = this.elementMap.get(parentId) as HTMLElement;
-    const child = this.elementMap.get(childId) as HTMLElement | Text;
+    const parent = this.nodeIndexStack.get(parentId) as HTMLElement;
+    const child = this.nodeIndexStack.get(childId) as HTMLElement | Text;
 
     if (parent && child) {
-      this.elementMap.delete(childId);
+      this.nodeIndexStack.delete(childId);
 
-      if (this.elementCount > 0) {
-        this.elementCount--;
+      if (this.nodeCount > 0) {
+        this.nodeCount--;
       }
 
       parent.appendChild(child);
@@ -181,18 +184,18 @@ export class VirtualMachine {
   }
 
   appendSibling() {
-    const childId = this.elementCount - 1;
-    const parentId = this.elementCount - 2;
+    const childId = this.nodeCount - 1;
+    const parentId = this.nodeCount - 2;
     const insertionPosition = "afterend";
 
-    const parent = this.elementMap.get(parentId) as HTMLElement;
-    const child = this.elementMap.get(childId) as HTMLElement | Text;
+    const parent = this.nodeIndexStack.get(parentId) as HTMLElement;
+    const child = this.nodeIndexStack.get(childId) as HTMLElement | Text;
 
     if (parent && child) {
-      this.elementMap.delete(childId);
+      this.nodeIndexStack.delete(childId);
 
-      if (this.elementCount > 0) {
-        this.elementCount--;
+      if (this.nodeCount > 0) {
+        this.nodeCount--;
       }
 
       // avoids NoModificationAllowedError on FF which requires
@@ -224,8 +227,8 @@ export class VirtualMachine {
   removeChild() {
     const childId = this.pop();
     const parentId = this.pop();
-    const parent = this.elementMap.get(parentId) as HTMLElement;
-    const child = this.elementMap.get(childId) as HTMLElement;
+    const parent = this.nodeIndexStack.get(parentId) as HTMLElement;
+    const child = this.nodeIndexStack.get(childId) as HTMLElement;
     parent.removeChild(child);
   }
 
@@ -233,9 +236,9 @@ export class VirtualMachine {
     const newChildId = this.pop();
     const oldChildId = this.pop();
     const parentId = this.pop();
-    const parent = this.elementMap.get(parentId) as HTMLElement;
-    const newChild = this.elementMap.get(newChildId) as HTMLElement;
-    const oldChild = this.elementMap.get(oldChildId) as HTMLElement;
+    const parent = this.nodeIndexStack.get(parentId) as HTMLElement;
+    const newChild = this.nodeIndexStack.get(newChildId) as HTMLElement;
+    const oldChild = this.nodeIndexStack.get(oldChildId) as HTMLElement;
     parent.replaceChild(newChild, oldChild);
   }
 
@@ -248,9 +251,9 @@ export class VirtualMachine {
     this.pc += textLength;
 
     const textNode = document.createTextNode(textContent);
-    const id = this.elementCount++;
+    const id = this.nodeCount++;
 
-    this.elementMap.set(id, textNode);
+    this.nodeIndexStack.set(id, textNode);
     this.push(id); /* push idx of text node onto stack */
   }
 
@@ -258,7 +261,7 @@ export class VirtualMachine {
     const textLength = this.pop();
     const text = this.decodeUTF16String(textLength);
     const id = this.pop();
-    const textNode = this.elementMap.get(id) as Text;
+    const textNode = this.nodeIndexStack.get(id) as Text;
     textNode.nodeValue = text;
   }
 
@@ -266,7 +269,7 @@ export class VirtualMachine {
     const attrNameLength = this.pop();
     const attrName = this.decodeUTF16String(attrNameLength);
     const id = this.pop();
-    const element = this.elementMap.get(id) as HTMLElement;
+    const element = this.nodeIndexStack.get(id) as HTMLElement;
     element.removeAttribute(attrName);
   }
 
@@ -276,7 +279,7 @@ export class VirtualMachine {
     const styleValueLength = this.pop();
     const styleValue = this.decodeUTF16String(styleValueLength);
     const id = this.pop();
-    const element = this.elementMap.get(id) as HTMLElement;
+    const element = this.nodeIndexStack.get(id) as HTMLElement;
     element.style[styleName as any] = styleValue;
   }
 
@@ -284,7 +287,7 @@ export class VirtualMachine {
     const eventTypeLength = this.pop();
     const eventType = this.decodeUTF16String(eventTypeLength);
     const id = this.pop();
-    const element = this.elementMap.get(id) as HTMLElement;
+    const element = this.nodeIndexStack.get(id) as HTMLElement;
     const callbackId = this.pop();
     element.addEventListener(eventType, () => this.runCallback(callbackId));
   }
