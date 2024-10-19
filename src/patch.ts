@@ -1,3 +1,4 @@
+// Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
 import {
   OPCODE_CREATE_ELEMENT,
   OPCODE_SET_ATTRIBUTE,
