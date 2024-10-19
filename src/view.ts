@@ -48,8 +48,9 @@ export class Container implements Uint8ArraySlice {
     for (let i = 0; i < childrenLength; i++) {
       totalLength += this.children[i].render().length;
 
-      if (i < childrenLength - 1) {
-        totalLength += 1; /* add 1 byte for OPCODE_APPEND_SIBLING for all but the last child */
+      // - 1 prevents rendering all adjacent nodes
+      if (i < childrenLength /* - 1 */) {
+        totalLength += 1;
       }
     }
 
@@ -64,9 +65,10 @@ export class Container implements Uint8ArraySlice {
       buffer.set(childBytes, offset);
       offset += childBytes.length;
 
-      if (i < childrenLength - 1) {
+      // - 1 prevents rendering all adjacent nodes
+      if (i < childrenLength /* - 1 */) {
         buffer[offset] = OPCODE_APPEND_SIBLING;
-        offset += 1; /* add OPCODE_APPEND_SIBLING after each child, except the last one */
+        offset += 1;
       }
     }
 

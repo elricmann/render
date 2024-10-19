@@ -59,13 +59,23 @@ const bytecode = new Uint8Array([
 ]);
 
 // prettier-ignore
+// const _app =
+//   new View([
+//     new Container([
+//       new Text("text 1"),
+//       new Text("text 2")
+//     ]),
+//     new Text("text 3"),
+//   ]).render()
+
 const _app =
-  new View([
+  new Container([
+    new Text("text 1"),
+    new Text("text 2"),
     new Container([
-      new Text("text 1"),
-      new Text("text 2")
-    ]),
-    new Text("text 3"),
+      new Text("other text 3"),
+      new Text("other text 4"),
+    ])
   ]).render()
 
 // const vm = new VirtualMachine(bytecode);
