@@ -151,7 +151,7 @@ export class VirtualMachine {
     this.pc += attrValueLength;
 
     // we use nodeIndexStack to pop off least recent nodes
-    // which is why its correlates with a stack (intent)
+    // which is why it correlates with a stack (by intent)
 
     const elementId = this.nodeCount - 1; /* least recent element */
     const element = this.nodeIndexStack.get(elementId) as HTMLElement;

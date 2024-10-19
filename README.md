@@ -29,9 +29,43 @@ _This section is incomplete._
 
 ### Quick overview
 
+Render relies on **views** to return byte arrays with exact alignment of data values and offsets. The VM does not _fix_ program inputs which is why views form safe high-level wrappers representing extendable components. Aside, the default settings are supposed to be configurable.
+
+Portability is the primary goal of this library. I wrote `librender` expecting that there could be a **single optimizing bytecode IR** for various web-based rendering libraries. To this effect, there is an imperative-procedural approach when defining view methods that correspond to raw bytecode.
+
 <p align="center">
   <img width="80%" src="/.github/graph.png">
 </p>
+
+#### Completeness of the virtual machine
+
+The VM does not fully take the role of a DOM-based model and opcodes are only limited to DOM operations where inputs are serializable (e.g. event handlers are _not_ serializable). It lacks features like pausability and resumability, async batch streaming, per-batch scheduling, and virtual prioritization, that could essentially improve rendering.
+
+<p align="center">
+  <img width="80%" src="/.github/vm.png">
+</p>
+
+The structural description of the VM is:
+
+- The **stack** is reserved for holding references to handlers and raw strings
+- The **memory** applies to enabled shared memory (e.g. temporal view states) between VM instances
+- `nodeCount` is a counter that allows managing the `nodeIndexStack` in the DOM operations
+
+#### Portability of the bytecode IR
+
+WebAssembly modules are loaded as view slices into an array buffer representing a linear memory model. Since modules are precompiled, the bytecode could target `librender` with virtually no overhead. This would imply that optimizing the VM itself from the JavaScript source would improve existing programs without introducing layers of indirection.
+
+<p align="center">
+  <img width="80%" src="/.github/portable.png">
+</p>
+
+With this enabled, various high-level libraries targeting the bytecode can be used as microfrontends with predictability. Currently, `librender` is barely useable so this will require major effort to put in place. Additionally, certain data structures can be linearly represented for uniformity, e.g. C-like structs with offsets require no deallocation in WebAssembly. Growing memory is as easy as incrementing a pointer.
+
+Portability allows loading `.bin` files through a shared worker, which could be useful for monolithic SPAs that depend on server endpoints to fetch and render data in the main UI thread for client-side rendering.
+
+### Acknowledgements
+
+Render does not provide unique insights into the approach rendering is done or criteria for commiting DOM nodes for painting. Other libraries such as [React](https://react.dev/) (scheduling model) and [GlimmerVM](https://github.com/glimmerjs/glimmer-vm) (opcode-based rendering) are to be considered prior art in this regard.
 
 ### License
 

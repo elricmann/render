@@ -1,5 +1,5 @@
 // Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
 
-export * from "./vm";
-export * from "./view";
-export * from "./utils";
+export * as vm from "./vm";
+export * as view from "./view";
+export * as utils from "./utils";

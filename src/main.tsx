@@ -8,7 +8,7 @@ import {
   OPCODE_TEXT_NODE,
   OPCODE_NOP,
   OPCODE_APPEND_SIBLING,
-} from "./";
+} from "./vm";
 import { View, Text, Container, Button } from "./view";
 import { charCodes } from "./utils";
 
