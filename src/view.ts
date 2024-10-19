@@ -1,5 +1,6 @@
 // Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
 import {
+  OPCODE_APPEND_CHILD,
   OPCODE_APPEND_SIBLING,
   OPCODE_CREATE_ELEMENT,
   OPCODE_TEXT_NODE,
@@ -17,16 +18,45 @@ export class Text implements Uint8ArraySlice {
   }
 
   render(): Uint8Array {
-    const textBytes = new Uint8Array(this.text.length + 2);
+    const textBuffer = new Uint8Array(this.text.length + 2);
 
-    textBytes[0] = OPCODE_TEXT_NODE;
-    textBytes[1] = this.text.length;
+    textBuffer[0] = OPCODE_TEXT_NODE;
+    textBuffer[1] = this.text.length;
 
     for (let i = 0; i < this.text.length; i++) {
-      textBytes[i + 2] = this.text.charCodeAt(i);
+      textBuffer[i + 2] = this.text.charCodeAt(i);
     }
 
-    return textBytes;
+    return textBuffer;
+  }
+}
+
+export class Button implements Uint8ArraySlice {
+  constructor(private label: string = "") {}
+
+  render(): Uint8Array {
+    const labelLength = this.label.length;
+    const totalLength = labelLength + 6 + 5;
+    const labelBuffer = new Uint8Array(totalLength);
+
+    labelBuffer[0] = OPCODE_CREATE_ELEMENT;
+    labelBuffer[1] = 6;
+    labelBuffer[2] = 0x62;
+    labelBuffer[3] = 0x75;
+    labelBuffer[4] = 0x74;
+    labelBuffer[5] = 0x74;
+    labelBuffer[6] = 0x6f;
+    labelBuffer[7] = 0x6e;
+    labelBuffer[8] = OPCODE_TEXT_NODE;
+    labelBuffer[9] = labelLength;
+
+    for (let i = 0; i < labelLength; i++) {
+      labelBuffer[i + 10] = this.label.charCodeAt(i);
+    }
+
+    labelBuffer[totalLength - 1] = OPCODE_APPEND_CHILD;
+
+    return labelBuffer;
   }
 }
 
@@ -34,7 +64,7 @@ export class Container implements Uint8ArraySlice {
   constructor(public children: Uint8ArraySlice[] = []) {}
 
   render(): Uint8Array {
-    const containerBytes = new Uint8Array([
+    const containerBuffer = new Uint8Array([
       OPCODE_CREATE_ELEMENT,
       3,
       0x64,
@@ -42,10 +72,10 @@ export class Container implements Uint8ArraySlice {
       0x76,
     ]);
 
-    let totalLength = containerBytes.length,
+    let totalLength = containerBuffer.length,
       childrenLength = this.children.length;
 
-    for (let i = childrenLength - 1; i >= 0; i--) {
+    for (let i = 0; i < childrenLength; i++) {
       totalLength += this.children[i].render().length;
 
       // - 1 prevents rendering all adjacent nodes
@@ -55,11 +85,11 @@ export class Container implements Uint8ArraySlice {
     }
 
     const buffer = new Uint8Array(totalLength);
-    buffer.set(containerBytes, 0);
+    buffer.set(containerBuffer, 0);
 
-    let offset = containerBytes.length;
+    let offset = containerBuffer.length;
 
-    for (let i = childrenLength - 1; i >= 0; i--) {
+    for (let i = 0; i < childrenLength; i++) {
       const childBytes = this.children[i].render();
 
       buffer.set(childBytes, offset);
@@ -67,7 +97,7 @@ export class Container implements Uint8ArraySlice {
 
       // - 1 prevents rendering all adjacent nodes
       if (i < childrenLength /* - 1 */) {
-        buffer[offset] = OPCODE_APPEND_SIBLING;
+        buffer[offset] = OPCODE_APPEND_CHILD;
         offset += 1;
       }
     }
@@ -101,7 +131,7 @@ export class View implements Uint8ArraySlice {
   }
 }
 
-function view(constructorRef: any, metadata: any): any {
+export function view(constructorRef: any, metadata: any): any {
   const initialConstructor = constructorRef;
 
   function createInstance(classConstructor: any, parameters: any[]) {

@@ -9,7 +9,7 @@ import {
   OPCODE_NOP,
   OPCODE_APPEND_SIBLING,
 } from "./";
-import { View, Text, Container } from "./view";
+import { View, Text, Container, Button } from "./view";
 import { charCodes } from "./utils";
 
 const bytecode = new Uint8Array([
@@ -72,9 +72,15 @@ const _app =
   new Container([
     new Text("text 1"),
     new Text("text 2"),
+    new Button("click"),
     new Container([
       new Text("other text 3"),
       new Text("other text 4"),
+      new Container([
+        new Text("other text 3"),
+        new Button("click 2"),
+        new Text("other text 4"),
+      ])
     ])
   ]).render()
 
