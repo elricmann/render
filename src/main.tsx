@@ -9,7 +9,8 @@ import {
   OPCODE_NOP,
   OPCODE_APPEND_SIBLING,
 } from "./vm";
-import { View, Text, Container, Button } from "./view";
+import { patch } from "./patch";
+import { View, Text, Container, Button } from "./views";
 import { charCodes } from "./utils";
 
 const bytecode = new Uint8Array([
