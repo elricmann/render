@@ -9,9 +9,10 @@ _This section is incomplete._
 ### Features
 
 - [ ] Views
-  - [x] `Text` - static text view with label
   - [x] `View` - view instance serializer
-  - [x] `Container` - dynamic view with optional attributes
+  - [x] `Text` - static text view with title
+  - [x] `Button` - static button with label
+  - [x] `Container` - dynamic view with optional attributes (e.g. tag name)
 - [ ] Virtual machine DOM
   - [x] Create DOM nodes (`OPCODE_CREATE_ELEMENT`)
   - [x] Decode 8-bit entries with static offsets (UTF-16 character codes)
