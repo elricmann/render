@@ -80,8 +80,8 @@ const _app =
         new Text("other text 3"),
         new Button("click 2"),
         new Text("other text 4"),
-      ])
-    ])
+      ]).tagName(Container.SECTION)
+    ]).tagName(Container.ASIDE)
   ]).render()
 
 // const vm = new VirtualMachine(bytecode);

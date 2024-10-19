@@ -61,15 +61,27 @@ export class Button implements Uint8ArraySlice {
 }
 
 export class Container implements Uint8ArraySlice {
+  static readonly DIV = [0x64, 0x69, 0x76];
+  static readonly SECTION = [0x73, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e];
+  static readonly HEADER = [0x68, 0x65, 0x61, 0x64, 0x65, 0x72];
+  static readonly FOOTER = [0x66, 0x6f, 0x6f, 0x74, 0x65, 0x72];
+  static readonly ARTICLE = [0x61, 0x72, 0x74, 0x69, 0x63, 0x6c, 0x65];
+  static readonly ASIDE = [0x61, 0x73, 0x69, 0x64, 0x65];
+
+  private _tagName: number[] = Container.DIV;
+
   constructor(public children: Uint8ArraySlice[] = []) {}
+
+  tagName(tag: number[]): typeof this {
+    this._tagName = tag;
+    return this;
+  }
 
   render(): Uint8Array {
     const containerBuffer = new Uint8Array([
       OPCODE_CREATE_ELEMENT,
-      3,
-      0x64,
-      0x69,
-      0x76,
+      this._tagName.length,
+      ...this._tagName,
     ]);
 
     let totalLength = containerBuffer.length,
