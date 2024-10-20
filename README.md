@@ -22,7 +22,8 @@ _This section is incomplete._
   - [ ] Set `innerHTML` with in-memory string source
   - [x] Append adjacent DOM nodes as siblings (`OPCODE_APPEND_SIBLING`)
   - [ ] Diffing and patching arbitrary bytecodes
-- [ ] Consistency in rendering with timed `requestAnimationFrame`
+- [x] Consistency in rendering with timed `requestAnimationFrame`
+- [x] Streaming instruction blocks to VM (`createBytecodeStream`, `unsafe_streamBytecodeToVM`)
 - [ ] Non-tracking reactive primitives in views
 - [ ] Precompiled bytecode from views (requires build tools)
 - [ ] Off the main thread view serialization (`ThreadView`)

@@ -10,7 +10,7 @@ export const OPCODE_REMOVE_ATTRIBUTE = 0x08;
 export const OPCODE_STYLE = 0x09;
 export const OPCODE_EVENT_LISTENER = 0x0a;
 export const OPCODE_NOP = 0x0b;
-export const OPCODE_APPEND_SIBLING = 99;
+export const OPCODE_APPEND_SIBLING = 0x0c;
 
 export type Stack = Int32Array;
 export type Memory = Uint8Array;
