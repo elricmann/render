@@ -17,7 +17,8 @@
   "scripts": {
     "dev": "tsc && vite build --watch",
     "start": "vite --host",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "test": "echo y"
   },
   "devDependencies": {
     "@types/node": "^22.7.4",
