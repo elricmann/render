@@ -4,7 +4,7 @@ Experimental JavaScript UI rendering library. Render uses a lightweight stack-ba
 
 ### Installation & usage
 
-_This section is incomplete._
+Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) for basic usage.
 
 ### Features
 
