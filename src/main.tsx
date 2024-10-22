@@ -59,31 +59,20 @@ const bytecode = new Uint8Array([
   OPCODE_APPEND_CHILD,
 ]);
 
-// prettier-ignore
-// const _app =
-//   new View([
-//     new Container([
-//       new Text("text 1"),
-//       new Text("text 2")
-//     ]),
-//     new Text("text 3"),
-//   ]).render()
-
-const _app =
+const _app = new Container([
+  new Text("text 1"),
+  new Text("text 2"),
+  new Button("click"),
   new Container([
-    new Text("text 1"),
-    new Text("text 2"),
-    new Button("click"),
+    new Text("other text 3"),
+    new Text("other text 4"),
     new Container([
       new Text("other text 3"),
+      new Button("click 2"),
       new Text("other text 4"),
-      new Container([
-        new Text("other text 3"),
-        new Button("click 2"),
-        new Text("other text 4"),
-      ]).tagName(Container.SECTION)
-    ]).tagName(Container.ASIDE)
-  ]).render()
+    ]).tagName(Container.SECTION),
+  ]).tagName(Container.ASIDE),
+]).render();
 
 // const vm = new VirtualMachine(bytecode);
 const vm = new VirtualMachine(_app);

@@ -16,9 +16,8 @@ export function createBytecodeStream(
 ): ReadableStream<Uint8Array> {
   return new ReadableStream<Uint8Array>({
     start(controller) {
-      // bytecodeChunks.forEach((chunk) => controller.enqueue(chunk));
-
-      for (const chunk of bytecodeChunks) {
+      for (let i = 0, len = bytecodeChunks.length; i < len; i++) {
+        const chunk = bytecodeChunks[i];
         controller.enqueue(chunk);
       }
 

@@ -11,19 +11,16 @@ export type Uint8ArraySlice = {
 };
 
 export class Text implements Uint8ArraySlice {
-  private text: string;
-
-  constructor(text: string = "") {
-    this.text = text;
-  }
+  constructor(private text: string = "") {}
 
   render(): Uint8Array {
-    const textBuffer = new Uint8Array(this.text.length + 2);
+    const textLength = this.text.length;
+    const textBuffer = new Uint8Array(textLength + 2);
 
     textBuffer[0] = OPCODE_TEXT_NODE;
-    textBuffer[1] = this.text.length;
+    textBuffer[1] = textLength;
 
-    for (let i = 0; i < this.text.length; i++) {
+    for (let i = 0; i < textLength; i++) {
       textBuffer[i + 2] = this.text.charCodeAt(i);
     }
 
