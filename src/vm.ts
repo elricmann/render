@@ -304,14 +304,19 @@ export class VirtualMachine {
     // const idx = this.program[this.pc++];
     const callbackIndex = this.program[this.pc++];
 
-    const node = this.nodeIndexStack.get(this.nodeCount - 1) as HTMLElement;
+    const node = this.nodeIndexStack.get(this.nodeCount - 2) as HTMLElement;
+
+    // this.nodeIndexStack.delete(this.nodeCount - 2);
+
+    // if (this.nodeCount > 0) {
+    //   this.nodeCount--;
+    // }
 
     console.log({
       __eventStore,
       eventType,
-      eventTypeLength,
-      eventTypeChars,
       callbackIndex,
+      callback: __eventStore.get(callbackIndex),
       element: node,
     });
 

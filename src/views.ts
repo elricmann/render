@@ -3,9 +3,11 @@ import {
   OPCODE_APPEND_CHILD,
   OPCODE_APPEND_SIBLING,
   OPCODE_CREATE_ELEMENT,
+  OPCODE_EVENT_LISTENER,
   OPCODE_NOP,
   OPCODE_SET_ATTRIBUTE,
   OPCODE_TEXT_NODE,
+  __eventStore,
 } from "./vm";
 
 export type Uint8ArraySlice = {
@@ -33,6 +35,9 @@ export class Text implements Uint8ArraySlice {
 export class Button implements Uint8ArraySlice {
   private attributeBuffer: Uint8Array[] = [];
   private attributeLength: number = 0;
+  private eventBuffer: Uint8Array[] = [];
+  private eventBufferLength: number = 0;
+  private static eventCounter = 0;
 
   constructor(private label: string = "") {}
 
@@ -71,9 +76,33 @@ export class Button implements Uint8ArraySlice {
     return this;
   }
 
+  // @todo: hold counters in the VM stack by growing from top to base
+
+  click(callback: () => void): this {
+    const eventIdx = ++Button.eventCounter;
+
+    __eventStore.set(eventIdx, callback);
+
+    const buffer = new Uint8Array(8); /*!9*/
+    buffer[0] = OPCODE_EVENT_LISTENER;
+    buffer[1] = 5;
+    buffer[2] = 0x63;
+    buffer[3] = 0x6c;
+    buffer[4] = 0x69;
+    buffer[5] = 0x63;
+    buffer[6] = 0x6b;
+    buffer[7] = eventIdx;
+
+    this.eventBuffer.push(buffer);
+    this.eventBufferLength += buffer.length;
+
+    return this;
+  }
+
   render(): Uint8Array {
     const labelLength = this.label.length;
-    const totalLength = labelLength + 6 + 5 + this.attributeLength;
+    const totalLength =
+      labelLength + 6 + 5 + this.attributeLength + this.eventBufferLength;
     const labelBuffer = new Uint8Array(totalLength);
 
     labelBuffer[0] = OPCODE_CREATE_ELEMENT;
@@ -94,14 +123,16 @@ export class Button implements Uint8ArraySlice {
     let offset = labelLength + 10;
 
     for (let i = 0; i < this.attributeBuffer.length; i++) {
-      const attrBuffer = this.attributeBuffer[i];
-
-      for (let j = 0; j < attrBuffer.length; j++) {
-        labelBuffer[offset++] = attrBuffer[j];
-      }
+      labelBuffer.set(this.attributeBuffer[i], offset);
+      offset += this.attributeBuffer[i].length;
     }
 
-    labelBuffer[totalLength - 1] = OPCODE_APPEND_CHILD;
+    for (let i = 0; i < this.eventBuffer.length; i++) {
+      labelBuffer.set(this.eventBuffer[i], offset);
+      offset += this.eventBuffer[i].length;
+    }
+
+    labelBuffer[offset++] = OPCODE_APPEND_CHILD;
 
     return labelBuffer;
   }
