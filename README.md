@@ -19,6 +19,7 @@ Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) 
   - [x] `Container` - dynamic view with optional attributes (e.g. tag name)
   - [x] Tags corresponding to semantic elements (`Container`)
   - [x] Attributes on views (`attr` method), deprecate opcode for inline styles
+  - [x] Event listeners on views (`Button`)
 - [ ] Virtual machine DOM
   - [x] Create DOM nodes (`OPCODE_CREATE_ELEMENT`)
   - [x] Decode 8-bit entries with static offsets (UTF-16 character codes)
