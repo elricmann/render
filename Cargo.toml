@@ -1,0 +1,8 @@
+[package]
+name = "librender"
+version = "0.1.0"
+edition = "2021"
+authors = ["Elric Neumann <elricmann@proton.me>"]
+
+[lib]
+path = "src/target.rs"
