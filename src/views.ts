@@ -36,6 +36,16 @@ export class Button implements Uint8ArraySlice {
 
   constructor(private label: string = "") {}
 
+  id(value: string) {
+    this.attr("id", value);
+    return this;
+  }
+
+  class(value: string) {
+    this.attr("class", value);
+    return this;
+  }
+
   attr(key: string, value: string): this {
     const keyLength = key.length;
     const valueLength = value.length;
@@ -153,6 +163,16 @@ export class Container implements Uint8ArraySlice {
 
   tagName(tag: number[]): typeof this {
     this._tagName = tag;
+    return this;
+  }
+
+  id(value: string) {
+    this.attr("id", value);
+    return this;
+  }
+
+  class(value: string) {
+    this.attr("class", value);
     return this;
   }
 
