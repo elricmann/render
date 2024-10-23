@@ -1,4 +1,6 @@
-## render
+<h3>render</h3>
+
+<img align="right" width="100" height="100" src="/.github/logo.png">
 
 Experimental JavaScript UI rendering library. Render uses a lightweight stack-based VM with minimal opcodes to encode DOM trees and run DOM operations either immediately or in retained mode (by diffing and patching bytecodes). Components are defined as **views** that serialize their attributes and children into `Uint8Array` instances.
 
