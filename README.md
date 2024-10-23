@@ -4,6 +4,10 @@ Experimental JavaScript UI rendering library. Render uses a lightweight stack-ba
 
 ### Installation & usage
 
+```
+npm install librender
+```
+
 Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) for basic usage.
 
 ### Features
@@ -13,6 +17,8 @@ Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) 
   - [x] `Text` - static text view with title
   - [x] `Button` - static button with label
   - [x] `Container` - dynamic view with optional attributes (e.g. tag name)
+  - [x] Tags corresponding to semantic elements (`Container`)
+  - [x] Attributes on views (`attr` method), deprecate opcode for inline styles
 - [ ] Virtual machine DOM
   - [x] Create DOM nodes (`OPCODE_CREATE_ELEMENT`)
   - [x] Decode 8-bit entries with static offsets (UTF-16 character codes)
