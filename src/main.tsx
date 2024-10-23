@@ -59,6 +59,7 @@ const bytecode = new Uint8Array([
   OPCODE_APPEND_CHILD,
 ]);
 
+// prettier-ignore
 const _app = new Container([
   new Text("text 1"),
   new Text("text 2"),
@@ -68,7 +69,9 @@ const _app = new Container([
     new Text("other text 4"),
     new Container([
       new Text("other text 3"),
-      new Button("click 2"),
+      new Button("click 2")
+        .attr("id", "btn")
+        .attr("style", "border: 0; padding: 5px 8px; border-radius: 3px; font-weight: bold;"),
       new Text("other text 4"),
     ]).tagName(Container.SECTION),
   ]).tagName(Container.ASIDE),

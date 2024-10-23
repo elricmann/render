@@ -3,6 +3,8 @@ import {
   OPCODE_APPEND_CHILD,
   OPCODE_APPEND_SIBLING,
   OPCODE_CREATE_ELEMENT,
+  OPCODE_NOP,
+  OPCODE_SET_ATTRIBUTE,
   OPCODE_TEXT_NODE,
 } from "./vm";
 
@@ -29,11 +31,41 @@ export class Text implements Uint8ArraySlice {
 }
 
 export class Button implements Uint8ArraySlice {
+  private attributeBuffer: Uint8Array[] = [];
+  private attributeLength: number = 0;
+
   constructor(private label: string = "") {}
+
+  attr(key: string, value: string): this {
+    const keyLength = key.length;
+    const valueLength = value.length;
+    const attrBuffer = new Uint8Array(3 + keyLength + 1 + valueLength);
+
+    attrBuffer[0] = OPCODE_SET_ATTRIBUTE;
+    attrBuffer[1] = keyLength + 1; // length of key + 1 for required OPCODE_NOP
+
+    for (let i = 0; i < keyLength; i++) {
+      attrBuffer[i + 2] = key.charCodeAt(i);
+    }
+
+    attrBuffer[keyLength + 2] = OPCODE_NOP;
+    attrBuffer[keyLength + 3] = valueLength;
+
+    for (let i = 0; i < valueLength; i++) {
+      attrBuffer[keyLength + 4 + i] = value.charCodeAt(i);
+    }
+
+    console.log("attrBuffer:", JSON.stringify(attrBuffer));
+
+    this.attributeBuffer.push(attrBuffer);
+    this.attributeLength += attrBuffer.length;
+
+    return this;
+  }
 
   render(): Uint8Array {
     const labelLength = this.label.length;
-    const totalLength = labelLength + 6 + 5;
+    const totalLength = labelLength + 6 + 5 + this.attributeLength;
     const labelBuffer = new Uint8Array(totalLength);
 
     labelBuffer[0] = OPCODE_CREATE_ELEMENT;
@@ -51,7 +83,19 @@ export class Button implements Uint8ArraySlice {
       labelBuffer[i + 10] = this.label.charCodeAt(i);
     }
 
+    let offset = labelLength + 10;
+
+    for (let i = 0; i < this.attributeBuffer.length; i++) {
+      const attrBuffer = this.attributeBuffer[i];
+
+      for (let j = 0; j < attrBuffer.length; j++) {
+        labelBuffer[offset++] = attrBuffer[j];
+      }
+    }
+
     labelBuffer[totalLength - 1] = OPCODE_APPEND_CHILD;
+
+    console.log("final buffer:", JSON.stringify(labelBuffer));
 
     return labelBuffer;
   }

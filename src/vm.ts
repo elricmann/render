@@ -153,8 +153,13 @@ export class VirtualMachine {
     // we use nodeIndexStack to pop off least recent nodes
     // which is why it correlates with a stack (by intent)
 
-    const elementId = this.nodeCount - 1; /* least recent element */
+    const elementId = this.nodeCount - 2; /* 2nd least recent node */
     const element = this.nodeIndexStack.get(elementId) as HTMLElement;
+
+    // @todo: views may require least recent element to not be the
+    // element where the attribute is defined on. check the node type
+
+    console.log(this.nodeIndexStack);
 
     if (element) {
       element.setAttribute(attrName, attrValue);
