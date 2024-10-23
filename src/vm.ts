@@ -22,6 +22,8 @@ export type DOMAttributes = Record<string, string>;
 const isGecko =
   typeof navigator !== "undefined" && /gecko/i.test(navigator.userAgent);
 
+export const __eventStore = new Map<number, () => void>();
+
 export class VirtualMachine {
   pc: number;
   stack: Stack;
@@ -290,12 +292,36 @@ export class VirtualMachine {
   }
 
   setEventListener() {
-    const eventTypeLength = this.pop();
-    const eventType = this.decodeUTF16String(eventTypeLength);
-    const id = this.pop();
-    const element = this.nodeIndexStack.get(id) as HTMLElement;
-    const callbackId = this.pop();
-    element.addEventListener(eventType, () => this.runCallback(callbackId));
+    const eventTypeLength = this.program[this.pc++];
+    const eventTypeChars = new Uint8Array(eventTypeLength);
+
+    for (let i = 0; i < eventTypeLength; i++) {
+      eventTypeChars[i] = this.program[this.pc++];
+    }
+
+    const eventType = String.fromCharCode(...eventTypeChars);
+
+    // const idx = this.program[this.pc++];
+    const callbackIndex = this.program[this.pc++];
+
+    const node = this.nodeIndexStack.get(this.nodeCount - 1) as HTMLElement;
+
+    console.log({
+      __eventStore,
+      eventType,
+      eventTypeLength,
+      eventTypeChars,
+      callbackIndex,
+      element: node,
+    });
+
+    node.addEventListener(eventType, () => {
+      const callback = __eventStore.get(callbackIndex);
+
+      if (callback) {
+        callback();
+      }
+    });
   }
 
   runCallback(callbackId: number) {

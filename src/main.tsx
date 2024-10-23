@@ -1,6 +1,7 @@
 // @ts-ignore
 // import * as render from "librender";
 import {
+  __eventStore,
   VirtualMachine,
   OPCODE_CREATE_ELEMENT,
   OPCODE_SET_ATTRIBUTE,
@@ -8,6 +9,7 @@ import {
   OPCODE_TEXT_NODE,
   OPCODE_NOP,
   OPCODE_APPEND_SIBLING,
+  OPCODE_EVENT_LISTENER,
 } from "./vm";
 import { patch } from "./patch";
 import { View, Text, Container, Button } from "./views";
@@ -21,42 +23,46 @@ const bytecode = new Uint8Array([
   // =======================================
 
   // =======================================
+  OPCODE_TEXT_NODE,
+  5,
+  ...charCodes("hello"),
+  // =======================================
+
+  // =======================================
   OPCODE_SET_ATTRIBUTE,
   3,
   ...charCodes("id"),
   OPCODE_NOP,
   1,
   ...charCodes("1"),
-  // =======================================
 
-  // =======================================
-  OPCODE_TEXT_NODE,
+  OPCODE_APPEND_CHILD, // <-------- defer append child instruction after attribute
+
+  OPCODE_EVENT_LISTENER,
   5,
-  ...charCodes("hello"),
-  // =======================================
+  ...charCodes("click"),
+  0x1,
 
-  OPCODE_APPEND_CHILD,
+  // OPCODE_CREATE_ELEMENT,
+  // 6,
+  // ...charCodes("button"),
 
-  OPCODE_CREATE_ELEMENT,
-  6,
-  ...charCodes("button"),
+  // OPCODE_TEXT_NODE,
+  // 7,
+  // ...charCodes("hello 2"),
 
-  OPCODE_TEXT_NODE,
-  7,
-  ...charCodes("hello 2"),
+  // OPCODE_APPEND_CHILD,
 
-  OPCODE_APPEND_CHILD,
+  // OPCODE_APPEND_SIBLING,
 
-  OPCODE_APPEND_SIBLING,
-
-  // ===
-  OPCODE_CREATE_ELEMENT,
-  3,
-  ...charCodes("div"),
-  OPCODE_TEXT_NODE,
-  7,
-  ...charCodes("hello 3"),
-  OPCODE_APPEND_CHILD,
+  // // ===
+  // OPCODE_CREATE_ELEMENT,
+  // 3,
+  // ...charCodes("div"),
+  // OPCODE_TEXT_NODE,
+  // 7,
+  // ...charCodes("hello 3"),
+  // OPCODE_APPEND_CHILD,
 ]);
 
 // prettier-ignore
@@ -83,10 +89,12 @@ const _app = new Container([
   ]).tagName(Container.ASIDE).attr("style", "font-family: sans-serif"),
 ]).render();
 
-// const vm = new VirtualMachine(bytecode);
-const vm = new VirtualMachine(_app);
+__eventStore.set(0x1, () => console.log("clicked!"));
+
+const vm = new VirtualMachine(bytecode);
+// const vm = new VirtualMachine(_app);
 vm.run();
 
-console.log(vm);
+console.log(vm, __eventStore);
 
 document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);

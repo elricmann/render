@@ -27,7 +27,8 @@ Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) 
   - [x] Create DOM text node (`OPCODE_TEXT_NODE`)
   - [ ] Set `innerHTML` with in-memory string source
   - [x] Append adjacent DOM nodes as siblings (`OPCODE_APPEND_SIBLING`)
-  - [ ] Diffing and patching arbitrary bytecodes
+  - [ ] Diffing and patching arbitrary bytecodes (partially complete)
+  - [x] Event listeners on least recent node (`OPCODE_EVENT_LISTENER`, requires `__eventStore`)
 - [x] Consistency in rendering with timed `requestAnimationFrame`
 - [x] Streaming instruction blocks to VM (`createBytecodeStream`, `unsafe_streamBytecodeToVM`)
 - [ ] Non-tracking reactive primitives in views
