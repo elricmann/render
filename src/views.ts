@@ -55,8 +55,6 @@ export class Button implements Uint8ArraySlice {
       attrBuffer[keyLength + 4 + i] = value.charCodeAt(i);
     }
 
-    console.log("attrBuffer:", JSON.stringify(attrBuffer));
-
     this.attributeBuffer.push(attrBuffer);
     this.attributeLength += attrBuffer.length;
 
@@ -95,8 +93,6 @@ export class Button implements Uint8ArraySlice {
 
     labelBuffer[totalLength - 1] = OPCODE_APPEND_CHILD;
 
-    console.log("final buffer:", JSON.stringify(labelBuffer));
-
     return labelBuffer;
   }
 }
@@ -110,6 +106,8 @@ export class Container implements Uint8ArraySlice {
   static readonly ASIDE = [0x61, 0x73, 0x69, 0x64, 0x65];
 
   private _tagName: number[] = Container.DIV;
+  private attributeBuffer: Uint8Array[] = [];
+  private attributeLength: number = 0;
 
   constructor(public children: Uint8ArraySlice[] = []) {}
 
@@ -118,40 +116,64 @@ export class Container implements Uint8ArraySlice {
     return this;
   }
 
+  attr(key: string, value: string): this {
+    const keyLength = key.length;
+    const valueLength = value.length;
+    const attrBuffer = new Uint8Array(3 + keyLength + 1 + valueLength);
+
+    attrBuffer[0] = OPCODE_SET_ATTRIBUTE;
+    attrBuffer[1] = keyLength + 1;
+
+    for (let i = 0; i < keyLength; i++) {
+      attrBuffer[i + 2] = key.charCodeAt(i);
+    }
+
+    attrBuffer[keyLength + 2] = OPCODE_NOP;
+    attrBuffer[keyLength + 3] = valueLength;
+
+    for (let i = 0; i < valueLength; i++) {
+      attrBuffer[keyLength + 4 + i] = value.charCodeAt(i);
+    }
+
+    this.attributeBuffer.push(attrBuffer);
+    this.attributeLength += attrBuffer.length;
+
+    return this;
+  }
+
   render(): Uint8Array {
-    const containerBuffer = new Uint8Array([
-      OPCODE_CREATE_ELEMENT,
-      this._tagName.length,
-      ...this._tagName,
-    ]);
+    const tagNameLength = this._tagName.length;
+    let totalLength = tagNameLength + 2 + this.attributeLength;
 
-    let totalLength = containerBuffer.length,
-      childrenLength = this.children.length;
-
-    for (let i = 0; i < childrenLength; i++) {
+    for (let i = 0; i < this.children.length; i++) {
       totalLength += this.children[i].render().length;
-
-      // - 1 prevents rendering all adjacent nodes
-      if (i < childrenLength /* - 1 */) {
-        totalLength += 1;
-      }
+      totalLength += 1; // for each OPCODE_APPEND_CHILD
     }
 
     const buffer = new Uint8Array(totalLength);
-    buffer.set(containerBuffer, 0);
 
-    let offset = containerBuffer.length;
+    buffer[0] = OPCODE_CREATE_ELEMENT;
+    buffer[1] = tagNameLength;
+    buffer.set(this._tagName, 2);
 
-    for (let i = 0; i < childrenLength; i++) {
-      const childBytes = this.children[i].render();
+    let offset = tagNameLength + 2;
 
-      buffer.set(childBytes, offset);
-      offset += childBytes.length;
+    for (let i = 0; i < this.attributeBuffer.length; i++) {
+      const attrBuffer = this.attributeBuffer[i];
 
-      // - 1 prevents rendering all adjacent nodes
-      if (i < childrenLength /* - 1 */) {
-        buffer[offset] = OPCODE_APPEND_CHILD;
-        offset += 1;
+      for (let j = 0; j < attrBuffer.length; j++) {
+        buffer[offset++] = attrBuffer[j];
+      }
+    }
+
+    for (let i = 0; i < this.children.length; i++) {
+      const childBuffer = this.children[i].render();
+
+      buffer.set(childBuffer, offset);
+      offset += childBuffer.length;
+
+      if (i < this.children.length) {
+        buffer[offset++] = OPCODE_APPEND_CHILD;
       }
     }
 

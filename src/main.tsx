@@ -73,7 +73,7 @@ const _app = new Container([
         .attr("id", "btn")
         .attr("style", "border: 0; padding: 5px 8px; border-radius: 3px; font-weight: bold;"),
       new Text("other text 4"),
-    ]).tagName(Container.SECTION),
+    ]).tagName(Container.SECTION).attr("style", "background-color: #ffea9a;"),
   ]).tagName(Container.ASIDE),
 ]).render();
 

@@ -159,8 +159,6 @@ export class VirtualMachine {
     // @todo: views may require least recent element to not be the
     // element where the attribute is defined on. check the node type
 
-    console.log(this.nodeIndexStack);
-
     if (element) {
       element.setAttribute(attrName, attrValue);
     } else {
@@ -277,6 +275,9 @@ export class VirtualMachine {
     const element = this.nodeIndexStack.get(id) as HTMLElement;
     element.removeAttribute(attrName);
   }
+
+  // @todo: since inline styles are done via attributes,
+  // this may be used for pushing to an external stylesheet
 
   setStyle() {
     const styleNameLength = this.pop();
