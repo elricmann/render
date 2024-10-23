@@ -3,6 +3,11 @@ name = "librender"
 version = "0.1.0"
 edition = "2021"
 authors = ["Elric Neumann <elricmann@proton.me>"]
+description = "librender bytecode IR bindings"
+license = "MIT"
+homepage = "https://github.com/elricmann/render"
+documentation = "https://github.com/elricmann/render/wiki"
+repository = "https://github.com/elricmann/render"
 
 [lib]
 path = "src/target.rs"
