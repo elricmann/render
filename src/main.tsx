@@ -61,20 +61,26 @@ const bytecode = new Uint8Array([
 
 // prettier-ignore
 const _app = new Container([
+  new Container([ // <h3>
+    new Text("librender tests")
+  ]).tagName(Container.H3),
   new Text("text 1"),
   new Text("text 2"),
   new Button("click"),
-  new Container([
+  new Container([ // <pre>
+    new Text("const n = 0;")
+  ]).tagName(Container.PRE),
+  new Container([ // <aside>
     new Text("other text 3"),
     new Text("other text 4"),
-    new Container([
+    new Container([ // <section>
       new Text("other text 3"),
       new Button("click 2")
         .attr("id", "btn")
         .attr("style", "border: 0; padding: 5px 8px; border-radius: 3px; font-weight: bold;"),
       new Text("other text 4"),
     ]).tagName(Container.SECTION).attr("style", "background-color: #ffea9a;"),
-  ]).tagName(Container.ASIDE),
+  ]).tagName(Container.ASIDE).attr("style", "font-family: sans-serif"),
 ]).render();
 
 // const vm = new VirtualMachine(bytecode);
