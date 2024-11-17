@@ -254,7 +254,7 @@ pub unsafe extern "C" fn librender_append_bytes(
     while i < count {
         librender_append_byte(buf, *bytes.offset(i as isize));
         i = i.wrapping_add(1);
-        i;
+        // i;
     }
 }
 
@@ -521,8 +521,9 @@ pub unsafe extern "C" fn librender_merge_bytecode(
                 .wrapping_add((**buffers.offset(i as isize)).size)
                 as size_t as size_t;
         }
+
         i = i.wrapping_add(1);
-        i;
+        // i;
     }
 
     let mut merged_buffer: *mut librender_bytecode_buffer = librender_create_buffer(total_size);
@@ -541,8 +542,9 @@ pub unsafe extern "C" fn librender_merge_bytecode(
                 (**buffers.offset(i_0 as isize)).size,
             );
         }
+
         i_0 = i_0.wrapping_add(1);
-        i_0;
+        // i_0;
     }
 
     return merged_buffer;
@@ -642,7 +644,7 @@ pub unsafe extern "C" fn librender_insert_byte(
         *((*buf).buffer).offset(i as isize) =
             *((*buf).buffer).offset(i.wrapping_sub(1 as libc::c_int as libc::c_ulong) as isize);
         i = i.wrapping_sub(1);
-        i;
+        // i;
     }
 
     *((*buf).buffer).offset(index as isize) = byte;
@@ -665,7 +667,7 @@ pub unsafe extern "C" fn librender_remove_byte(
         *((*buf).buffer).offset(i as isize) =
             *((*buf).buffer).offset(i.wrapping_add(1 as libc::c_int as libc::c_ulong) as isize);
         i = i.wrapping_add(1);
-        i;
+        // i;
     }
 
     (*buf).size = ((*buf).size).wrapping_sub(1);

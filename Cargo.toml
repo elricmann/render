@@ -11,3 +11,6 @@ repository = "https://github.com/elricmann/render"
 
 [lib]
 path = "src/target.rs"
+
+[dependencies]
+libc = "0.2"
