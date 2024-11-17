@@ -1,3 +1,7 @@
+# librender preset
+src/preset/lib
+src/preset/node_modules
+
 # dependencies
 node_modules
 

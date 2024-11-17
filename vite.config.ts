@@ -1,9 +1,10 @@
 import path from "path";
 import { defineConfig, UserConfig } from "vite";
+import babel from "vite-plugin-babel";
 
 export default defineConfig({
   base: "./",
-  plugins: [],
+  plugins: [babel()],
   build: {
     sourcemap: true,
     lib: {

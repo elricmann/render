@@ -1,0 +1,16 @@
+{
+  "name": "babel-preset-librender",
+  "version": "0.1.0",
+  "description": "Babel preset with JSX syntax transform and optimizations for Render",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@babel/core": "^7.21.0",
+    "@babel/plugin-syntax-jsx": "^7.21.0",
+    "typescript": "^5.0.0"
+  }
+}
