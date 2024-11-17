@@ -98,5 +98,7 @@ const vm = new VirtualMachine(_app);
 vm.run();
 
 // console.log(vm, __eventStore);
+// @ts-ignore
+console.log(<div>hello</div>);
 
 document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);

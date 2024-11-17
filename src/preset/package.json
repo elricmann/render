@@ -2,7 +2,7 @@
   "name": "babel-preset-librender",
   "version": "0.1.0",
   "description": "Babel preset with JSX syntax transform and optimizations for Render",
-  "main": "index.js",
+  "main": "lib/index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
@@ -11,6 +11,11 @@
   "dependencies": {
     "@babel/core": "^7.21.0",
     "@babel/plugin-syntax-jsx": "^7.21.0",
+    "@babel/types": "^7.26.0",
     "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/babel-types": "^7.0.16",
+    "@types/babel__core": "^7.20.5"
   }
 }

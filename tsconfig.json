@@ -5,7 +5,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-    // "jsx": "react-jsx",
+    // "jsx": "preserve",
     "types": ["vite/client", "node"],
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowJs": true,

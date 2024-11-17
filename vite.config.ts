@@ -1,10 +1,18 @@
 import path from "path";
 import { defineConfig, UserConfig } from "vite";
 import babel from "vite-plugin-babel";
+// @ts-ignore
+import preset from "./src/preset";
 
 export default defineConfig({
   base: "./",
-  plugins: [babel()],
+  plugins: [
+    babel({
+      babelConfig: {
+        presets: [preset],
+      },
+    }),
+  ],
   build: {
     sourcemap: true,
     lib: {
