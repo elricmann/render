@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 // import * as render from "librender";
 import {
   __eventStore,
@@ -98,7 +98,18 @@ const vm = new VirtualMachine(_app);
 vm.run();
 
 // console.log(vm, __eventStore);
-// @ts-ignore
-console.log(<div>hello</div>);
 
-document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);
+const App = () => {
+  return (
+    <div>
+      hello <span>world</span>
+    </div>
+  );
+};
+
+const _vm = new VirtualMachine(App().render());
+_vm.run();
+
+console.log(_vm.peek());
+
+document.getElementById("root")?.appendChild(_vm.peek() as HTMLElement);
