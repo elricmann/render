@@ -69,7 +69,7 @@ const bytecode = new Uint8Array([
 const _app = new Container([
   new Container([ // <h3>
     new Text("librender tests")
-  ]).tagName(Container.H3),
+  ]).tagName(Container.H3).on("click", () => console.log("tests...")),
   new Text("text 1"),
   new Text("text 2"),
   new Button("click")

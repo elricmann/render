@@ -192,6 +192,8 @@ export class Container implements Uint8ArraySlice {
   private _tagName: number[] = Container.DIV;
   private attributeBuffer: Uint8Array[] = [];
   private attributeLength: number = 0;
+  private eventBuffer: Uint8Array[] = [];
+  private eventBufferLength: number = 0;
 
   constructor(public children: Uint8ArraySlice[] = []) {}
 
@@ -235,9 +237,33 @@ export class Container implements Uint8ArraySlice {
     return this;
   }
 
+  on(event: string, callback: () => void): this {
+    const eventIdx = increment();
+
+    __eventStore.set(eventIdx, callback);
+
+    const eventTypeLength = event.length;
+    const eventBufferLength = event.length + 3; /* opcode, length, idx */
+
+    const buffer = new Uint8Array(eventBufferLength);
+    buffer[0] = OPCODE_EVENT_LISTENER;
+    buffer[1] = eventTypeLength;
+
+    for (let i = 0; i < eventTypeLength; i++) {
+      buffer[i + 2] = event.charCodeAt(i);
+    }
+
+    buffer[eventTypeLength + 2] = eventIdx;
+
+    this.eventBuffer.push(buffer);
+    this.eventBufferLength += buffer.length;
+
+    return this;
+  }
+
   render(): Uint8Array {
     const tagNameLength = this._tagName.length;
-    let totalLength = tagNameLength + 2 + this.attributeLength;
+    let totalLength = tagNameLength + 2 + this.attributeLength + this.eventBufferLength;
 
     for (let i = 0; i < this.children.length; i++) {
       totalLength += this.children[i].render().length;
@@ -258,6 +284,11 @@ export class Container implements Uint8ArraySlice {
       for (let j = 0; j < attrBuffer.length; j++) {
         buffer[offset++] = attrBuffer[j];
       }
+    }
+
+    for (let i = 0; i < this.eventBuffer.length; i++) {
+      buffer.set(this.eventBuffer[i], offset);
+      offset += this.eventBuffer[i].length;
     }
 
     for (let i = 0; i < this.children.length; i++) {
