@@ -73,7 +73,7 @@ const _app = new Container([
   new Text("text 1"),
   new Text("text 2"),
   new Button("click")
-    .click(() => console.log("clicked 1")),
+    .on("click", () => console.log("clicked 1")),
   new Container([ // <pre>
     new Text("const n = 0;")
   ]).tagName(Container.PRE),
@@ -85,7 +85,7 @@ const _app = new Container([
       new Button("click 2")
         .attr("id", "btn")
         .attr("style", "border: 0; padding: 5px 8px; border-radius: 3px; font-weight: bold;")
-        .on("click", () => console.log("working")),
+        .on("dblclick", () => console.log("working")),
         // .click(() => console.log("clicked 2")),
       new Text("other text 4"),
     ]).tagName(Container.SECTION).attr("style", "background-color: #ffea9a;"),
