@@ -11,12 +11,7 @@ function renderLoaderPlugin(): Plugin {
       const output = transform(code, {
         filename: id,
         presets: ["babel-preset-librender"],
-        // sourceMaps: true,
       });
-
-      // console.log({
-      //   module: output?.code,
-      // });
 
       return {
         code: output?.code || "",
@@ -28,20 +23,9 @@ function renderLoaderPlugin(): Plugin {
 
 export default defineConfig({
   base: "./",
-  plugins: [
-    renderLoaderPlugin(),
-    // babel({
-    //   babelConfig: {
-    //     // babelrc: false,
-    //     // configFile: false,
-    //     // presets: ["babel-preset-librender"],
-    //   },
-    // }),
-  ],
+  plugins: [renderLoaderPlugin()],
   esbuild: {
-    jsx: "preserve",
-    // jsxFactory: "h",
-    // jsxFragment: "Fragment",
+    jsx: "preserve" /*!*/,
   },
   build: {
     sourcemap: true,
