@@ -1,4 +1,5 @@
 // Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
+import { increment } from "./utils";
 import {
   OPCODE_APPEND_CHILD,
   OPCODE_APPEND_SIBLING,
@@ -37,7 +38,6 @@ export class Button implements Uint8ArraySlice {
   private attributeLength: number = 0;
   private eventBuffer: Uint8Array[] = [];
   private eventBufferLength: number = 0;
-  private static eventCounter = 0;
 
   constructor(private label: string = "") {}
 
@@ -79,7 +79,7 @@ export class Button implements Uint8ArraySlice {
   // @todo: hold counters in the VM stack by growing from top to base
 
   on(event: string, callback: () => void): this {
-    const eventIdx = ++Button.eventCounter;
+    const eventIdx = increment();
 
     __eventStore.set(eventIdx, callback);
 

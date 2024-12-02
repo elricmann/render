@@ -1,6 +1,16 @@
 // Copyright (c) 2024 Elric Neumann. All rights reserved. MIT license.
 import { VirtualMachine } from "./vm";
 
+export const increment = (() => {
+  let count = 0;
+
+  return () => {
+    count += 1;
+
+    return count;
+  };
+})();
+
 export function charCodes(...args: string[]): number[] {
   const acc: number[] = [],
     argslen = args.length;
