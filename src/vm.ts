@@ -100,6 +100,8 @@ export class VirtualMachine {
           this.pc = this.program.length;
       }
     }
+
+    return this;
   }
 
   createElement() {

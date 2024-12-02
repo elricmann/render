@@ -91,25 +91,14 @@ const _app = new Container([
   ]).tagName(Container.ASIDE).attr("style", "font-family: sans-serif"),
 ]).render();
 
-// __eventStore.set(0x1, () => console.log("clicked!"));
-
-// const vm = new VirtualMachine(bytecode);
-const vm = new VirtualMachine(_app);
-vm.run();
-
-// console.log(vm, __eventStore);
+// ====================
 
 const App = () => {
-  return (
-    <div>
-      hello <span>world</span>
-    </div>
-  );
+  return <div>hello world!</div>;
 };
 
-const _vm = new VirtualMachine(App().render());
-_vm.run();
+const vm = new VirtualMachine(App().render());
 
-console.log(_vm.peek());
+console.log(vm.run().peek());
 
-document.getElementById("root")?.appendChild(_vm.peek() as HTMLElement);
+document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);
