@@ -85,7 +85,8 @@ const _app = new Container([
       new Button("click 2")
         .attr("id", "btn")
         .attr("style", "border: 0; padding: 5px 8px; border-radius: 3px; font-weight: bold;")
-        .click(() => console.log("clicked 2")),
+        .on("click", () => console.log("working")),
+        // .click(() => console.log("clicked 2")),
       new Text("other text 4"),
     ]).tagName(Container.SECTION).attr("style", "background-color: #ffea9a;"),
   ]).tagName(Container.ASIDE).attr("style", "font-family: sans-serif"),
@@ -97,7 +98,7 @@ const App = () => {
   return <div>hello world!</div>;
 };
 
-const vm = new VirtualMachine(App().render());
+const vm = new VirtualMachine(_app);
 
 console.log(vm.run().peek());
 

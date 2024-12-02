@@ -93,6 +93,40 @@ export class Button implements Uint8ArraySlice {
     buffer[6] = 0x6b;
     buffer[7] = eventIdx;
 
+    console.log({ click: "click", buffer, eventBufferLength: buffer.length });
+
+    this.eventBuffer.push(buffer);
+    this.eventBufferLength += buffer.length;
+
+    return this;
+  }
+
+  on(event: string, callback: () => void): this {
+    const eventIdx = ++Button.eventCounter;
+
+    __eventStore.set(eventIdx, callback);
+
+    const eventTypeLength = event.length;
+    const eventBufferLength = event.length + 3; /* opcode, length, idx */
+
+    const buffer = new Uint8Array(eventBufferLength);
+    buffer[0] = OPCODE_EVENT_LISTENER;
+    buffer[1] = eventTypeLength;
+
+    for (let i = 0; i < eventTypeLength; i++) {
+      buffer[i + 2] = event.charCodeAt(i);
+    }
+
+    // buffer[2] = 0x63;
+    // buffer[3] = 0x6c;
+    // buffer[4] = 0x69;
+    // buffer[5] = 0x63;
+    // buffer[6] = 0x6b;
+
+    buffer[eventTypeLength + 2] = eventIdx;
+
+    console.log({ buffer, eventBufferLength });
+
     this.eventBuffer.push(buffer);
     this.eventBufferLength += buffer.length;
 
