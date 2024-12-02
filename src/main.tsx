@@ -95,10 +95,15 @@ const _app = new Container([
 // ====================
 
 const App = () => {
-  return <div>hello world!</div>;
+  return (
+    <div>
+      <div>hello world!</div>
+      <button on:click={() => {}}>Click</button>
+    </div>
+  );
 };
 
-const vm = new VirtualMachine(_app);
+const vm = new VirtualMachine(App().render());
 
 console.log(vm.run().peek());
 
