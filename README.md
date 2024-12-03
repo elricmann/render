@@ -10,7 +10,11 @@ Experimental JavaScript UI rendering library. Render uses a lightweight stack-ba
 npm install librender
 ```
 
-Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) for basic usage.
+Refer to the [wiki](https://github.com/elricmann/render/wiki) for basic usage.
+
+> [!Note]
+>
+> _The documentation starts from the v0.2 release of Render, which will not cover `librender` usage in other languages (until API stability towards 1.0). For a basic introduction to this library, refer to the wiki._
 
 ### Features
 
@@ -21,7 +25,8 @@ Refer to [main.tsx](https://github.com/elricmann/render/blob/main/src/main.tsx) 
   - [x] `Container` - dynamic view with optional attributes (e.g. tag name)
   - [x] Tags corresponding to semantic elements (`Container`)
   - [x] Attributes on views (`attr` method), deprecate opcode for inline styles
-  - [x] Event listeners on views (`Button`)
+  - [x] Event listeners on views (`Container`)
+  - [x] JSX elements, attributes and expressions
 - [ ] Virtual machine DOM
   - [x] Create DOM nodes (`OPCODE_CREATE_ELEMENT`)
   - [x] Decode 8-bit entries with static offsets (UTF-16 character codes)
