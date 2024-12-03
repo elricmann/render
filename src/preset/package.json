@@ -1,7 +1,25 @@
 {
   "name": "babel-preset-librender",
   "version": "0.1.0",
-  "description": "Babel preset with JSX syntax transform and optimizations for Render",
+  "description": "Babel preset with JSX syntax transformations and optimizations for Render",
+  "author": "Elric Neumann <elricmann@proton.me> (https://elric.pl)",
+  "homepage": "https://github.com/elricmann/render",
+  "repository": "github:elricmann/render",
+  "license": "MIT",
+  "keywords": [
+    "javascript",
+    "typescript",
+    "render",
+    "UI",
+    "optimizations",
+    "frame-rate",
+    "scheduling",
+    "batching",
+    "bytecode",
+    "virtual-dom",
+    "virtual-machine",
+    "webassembly"
+  ],
   "main": "lib/index.js",
   "types": "index.d.ts",
   "scripts": {
