@@ -22,6 +22,9 @@
   ],
   "main": "lib/index.js",
   "types": "index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build"
@@ -29,10 +32,10 @@
   "dependencies": {
     "@babel/core": "^7.26.0",
     "@babel/plugin-syntax-jsx": "^7.21.0",
-    "@babel/types": "^7.26.0",
-    "typescript": "^5.0.0"
+    "@babel/types": "^7.26.0"
   },
   "devDependencies": {
+    "typescript": "^5.0.0",
     "@types/babel-types": "^7.0.16",
     "@types/babel__core": "^7.20.5"
   }
