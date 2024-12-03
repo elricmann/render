@@ -27,7 +27,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "test": "echo y",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@babel/core": "^7.26.0",
