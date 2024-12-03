@@ -10,7 +10,7 @@ Experimental JavaScript UI rendering library. Render uses a lightweight stack-ba
 npm install librender
 ```
 
-Refer to the [wiki](https://github.com/elricmann/render/wiki) for basic usage.
+Refer to the [wiki](https://github.com/elricmann/render/wiki) for basic usage and API documentation.
 
 > [!Note]
 >
