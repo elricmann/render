@@ -54,7 +54,12 @@ const transformChildren = (children: JSXChild[]) => {
         t.isJSXExpressionContainer(child) &&
         t.isExpression(child.expression)
       ) {
-        return child.expression;
+        return t.newExpression(t.identifier("Text"), [
+          t.callExpression(
+            t.memberExpression(child.expression, t.identifier("toString")),
+            []
+          ),
+        ]);
       } else if (t.isJSXElement(child)) {
         return transformElement(child);
       }

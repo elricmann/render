@@ -94,12 +94,13 @@ const _app = new Container([
 
 // ====================
 
-const App = () => {
+const App = (n: number) => {
   return (
     <div>
-      <div>hello world!</div>
+      <h4>hello world!</h4>
+      <span>{n - 2}</span>
       <button
-        style="background: purple;"
+        style="background: purple; color: #fff;"
         onClick={() => console.log("clicked!")}
       >
         Click
@@ -108,7 +109,7 @@ const App = () => {
   );
 };
 
-const vm = new VirtualMachine(App().render());
+const vm = new VirtualMachine(App(10).render());
 
 console.log(vm.run().peek());
 
