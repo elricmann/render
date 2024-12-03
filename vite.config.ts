@@ -4,7 +4,7 @@ import { defineConfig, UserConfig, Plugin } from "vite";
 
 function renderLoaderPlugin(): Plugin {
   return {
-    name: "render-jsx-transform",
+    name: "librender-jsx-transform",
     transform(code, id) {
       if (!/\.(jsx|tsx)$/.test(id)) return;
 
@@ -12,6 +12,8 @@ function renderLoaderPlugin(): Plugin {
         filename: id,
         presets: ["babel-preset-librender"],
       });
+
+      console.log(output?.code);
 
       return {
         code: output?.code || "",

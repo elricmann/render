@@ -98,7 +98,12 @@ const App = () => {
   return (
     <div>
       <div>hello world!</div>
-      <button on:click={() => {}}>Click</button>
+      <button
+        style="background: purple;"
+        onClick={() => console.log("clicked!")}
+      >
+        Click
+      </button>
     </div>
   );
 };
