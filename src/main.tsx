@@ -111,6 +111,14 @@ const App = (n: number) => {
 
 const vm = new VirtualMachine(App(10).render());
 
-console.log(vm.run().peek());
+document.getElementById("root")?.appendChild(vm.run().peek() as HTMLElement);
 
-document.getElementById("root")?.appendChild(vm.peek() as HTMLElement);
+// ======= component & prop definitions
+
+const Count = (n: number) => <span>{n}</span>;
+
+let i = 0;
+
+setInterval(() => {
+  document.body.appendChild(new VirtualMachine(<Count n={i++} />).run().peek());
+}, 3000);

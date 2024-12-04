@@ -46,7 +46,10 @@ const transformChildren = (children: JSXChild[]) => {
   return children
     .map((child) => {
       if (t.isJSXText(child)) {
+        // prevents multiple Text nodes by skipping unnecessary whitespace in text
+        // @todo assign as optimization option in preset config
         if (!child.value || /^\s*$/.test(child.value)) return null;
+
         return t.newExpression(t.identifier("Text"), [
           t.stringLiteral(child.value.trim()),
         ]);
@@ -63,6 +66,7 @@ const transformChildren = (children: JSXChild[]) => {
       } else if (t.isJSXElement(child)) {
         return transformElement(child);
       }
+
       return null;
     })
     .filter(Boolean) as t.Expression[];
@@ -82,6 +86,24 @@ const methodsChain = (baseExpr: t.Expression, methods: any[]) => {
 const transformElement = (element: t.JSXElement) => {
   const openingElement = element.openingElement;
   const tagName = (openingElement.name as t.JSXIdentifier).name;
+
+  if (tagName[0] === tagName[0].toUpperCase()) {
+    const args: t.Expression[] = openingElement.attributes.map((attr) =>
+      t.isJSXAttribute(attr) && attr.value
+        ? t.isJSXExpressionContainer(attr.value)
+          ? (attr.value.expression as t.Expression)
+          : attr.value
+        : t.identifier("undefined")
+    );
+
+    return t.callExpression(
+      t.memberExpression(
+        t.callExpression(t.identifier(tagName), args),
+        t.identifier("render")
+      ),
+      []
+    );
+  }
 
   const children = transformChildren(element.children);
   const baseContainer = t.callExpression(
