@@ -109,9 +109,11 @@ const App = (n: number) => {
   );
 };
 
-const vm = new VirtualMachine(App(10).render());
-
-document.getElementById("root")?.appendChild(vm.run().peek() as HTMLElement);
+document
+  .getElementById("root")
+  ?.appendChild(
+    new VirtualMachine(App(10).render()).run().peek() as HTMLElement
+  );
 
 // ======= component & prop definitions
 
@@ -119,6 +121,12 @@ const Count = (n: number) => <span>{n}</span>;
 
 let i = 0;
 
-setInterval(() => {
-  document.body.appendChild(new VirtualMachine(<Count n={i++} />).run().peek());
-}, 3000);
+const Display = () => (
+  <div>
+    Value: <Count n={++i} />
+  </div>
+);
+
+document.body.appendChild(
+  new VirtualMachine((<Display />).render()).run().peek()
+);

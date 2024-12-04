@@ -96,13 +96,7 @@ const transformElement = (element: t.JSXElement) => {
         : t.identifier("undefined")
     );
 
-    return t.callExpression(
-      t.memberExpression(
-        t.callExpression(t.identifier(tagName), args),
-        t.identifier("render")
-      ),
-      []
-    );
+    return t.callExpression(t.identifier(tagName), args);
   }
 
   const children = transformChildren(element.children);
