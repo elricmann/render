@@ -13,7 +13,7 @@ function renderLoaderPlugin(): Plugin {
         presets: ["babel-preset-librender"],
       });
 
-      console.log(output?.code);
+      // console.log(output?.code);
 
       return {
         code: output?.code || "",

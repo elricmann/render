@@ -4,7 +4,6 @@
   "description": "Babel preset with JSX syntax transformations and optimizations for Render",
   "author": "Elric Neumann <elricmann@proton.me> (https://elric.pl)",
   "homepage": "https://github.com/elricmann/render",
-  "repository": "github:elricmann/render",
   "license": "MIT",
   "keywords": [
     "javascript",
