@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-librender",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "description": "Babel preset with JSX syntax transformations and optimizations for Render",
   "author": "Elric Neumann <elricmann@proton.me> (https://elric.pl)",
   "license": "MIT",
